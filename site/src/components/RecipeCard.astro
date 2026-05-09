@@ -1,0 +1,8 @@
+---
+const { recipe } = Astro.props;
+---
+<div class="card">
+  <h3><a href={`/${recipe.category}/${recipe.slug}/`} style="color: var(--color-brand); text-decoration: none;">{recipe.name}</a></h3>
+  <p style="font-size: 14px; color: var(--color-subtle); margin: 8px 0;">{recipe.summary}</p>
+  <div>{recipe.executorTypes.slice(0,5).map((t: string) => <span class="pill">{t}</span>)}{recipe.executorTypes.length > 5 && <span class="pill">+{recipe.executorTypes.length - 5} more</span>}</div>
+</div>

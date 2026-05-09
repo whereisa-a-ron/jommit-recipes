@@ -1,5 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-09T18:10:27.066Z",
-  "recipes": []
+  "generatedAt": "2026-05-09T18:11:49.697Z",
+  "recipes": [
+    {
+      "category": "automation",
+      "slug": "hello-world",
+      "name": "Hello World",
+      "summary": "A minimal smoke-test recipe for build validation.",
+      "executorTypes": [
+        "comment_issue"
+      ],
+      "ymlPath": "recipes/automation/hello-world/rule.yaml",
+      "screenshotPath": "recipes/automation/hello-world/screenshot.png"
+    }
+  ]
 }

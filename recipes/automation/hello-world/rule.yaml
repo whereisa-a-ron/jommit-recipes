@@ -1,0 +1,8 @@
+version: '1.0'
+automations:
+  - name: Hello World
+    type: event
+    enabled: false
+    executor:
+      type: comment_issue
+      body: Hello from Jommit!

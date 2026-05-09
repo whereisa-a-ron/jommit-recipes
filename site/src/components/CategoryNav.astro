@@ -1,0 +1,9 @@
+---
+const { categories, current } = Astro.props;
+---
+<nav style="min-width: 160px;">
+  <ul style="list-style: none; padding: 0; margin: 0;">
+    <li><a href="/" style="display:block;padding:6px 0;font-size:14px;color:var(--color-subtle);">All recipes</a></li>
+    {categories.map((c: string) => <li><a href={`/${c}/`} style={`display:block;padding:6px 0;font-size:14px;color:${c===current?'var(--color-brand)':'var(--color-subtle)'};font-weight:${c===current?700:400};`}>{c}</a></li>)}
+  </ul>
+</nav>

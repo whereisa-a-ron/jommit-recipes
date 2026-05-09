@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryNav from '../../components/CategoryNav.astro';
+import allIndex from '../../../../index.json';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+export function getStaticPaths() {
+  return allIndex.recipes.map((r: { category: string; slug: string }) => ({
+    params: { category: r.category, slug: r.slug },
+  }));
+}
+
+const { category, slug } = Astro.params;
+const recipe = allIndex.recipes.find(
+  (r: { category: string; slug: string }) => r.category === category && r.slug === slug
+);
+const categories = [...new Set(allIndex.recipes.map((r: { category: string }) => r.category))];
+
+// Read the rule.yaml content for display
+const repoRoot = new URL('../../../../../', import.meta.url).pathname;
+const rulePath = join(repoRoot, 'recipes', category as string, slug as string, 'rule.yaml');
+let ruleContent = '';
+try {
+  ruleContent = readFileSync(rulePath, 'utf8');
+} catch {
+  ruleContent = '# Could not load rule.yaml';
+}
+
+const githubBase = 'https://github.com/whereisa-a-ron/jommit-recipes/blob/main';
+const editUrl = `${githubBase}/recipes/${category}/${slug}/rule.yaml`;
+---
+<BaseLayout title={recipe?.name}>
+  <div style="display: flex; gap: 32px;">
+    <CategoryNav categories={categories} current={category} />
+    <div style="flex: 1;">
+      {recipe ? (
+        <>
+          <nav style="font-size: 13px; color: var(--color-subtle); margin-bottom: 16px;">
+            <a href="/" style="color: var(--color-brand);">Recipes</a> /
+            <a href={`/${category}/`} style="color: var(--color-brand); margin: 0 4px;">{category}</a> /
+            {recipe.name}
+          </nav>
+          <h1 style="font-size: 28px; margin-bottom: 8px;">{recipe.name}</h1>
+          <p style="color: var(--color-subtle); margin-bottom: 24px;">{recipe.summary}</p>
+          <div style="margin-bottom: 16px;">
+            {recipe.executorTypes.map((t: string) => <span class="pill">{t}</span>)}
+          </div>
+          <img
+            src={`https://raw.githubusercontent.com/whereisa-a-ron/jommit-recipes/main/${recipe.screenshotPath}`}
+            alt={`Screenshot of ${recipe.name}`}
+            style="max-width: 100%; border: 1px solid var(--color-border); border-radius: 6px; margin-bottom: 24px;"
+          />
+          <h2 style="font-size: 18px; margin-bottom: 8px;">Rule YAML</h2>
+          <pre style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 6px; padding: 16px; overflow-x: auto; font-size: 13px;"><code>{ruleContent}</code></pre>
+          <p style="margin-top: 16px; font-size: 13px;">
+            <a href={editUrl} style="color: var(--color-brand);">Edit this recipe on GitHub</a>
+          </p>
+        </>
+      ) : (
+        <p>Recipe not found.</p>
+      )}
+    </div>
+  </div>
+</BaseLayout>

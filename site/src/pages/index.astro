@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import CategoryNav from '../components/CategoryNav.astro';
+import index from '../../../index.json';
+const categories = [...new Set(index.recipes.map((r: { category: string }) => r.category))];
+---
+<BaseLayout>
+  <div style="display: flex; gap: 32px;">
+    <CategoryNav categories={categories} current={undefined} />
+    <div style="flex: 1;">
+      <h1 style="font-size: 24px; margin-bottom: 8px;">Jommit Recipes</h1>
+      <p style="color: var(--color-subtle); margin-bottom: 24px;">Ready-to-use Jommit automations for common patterns.</p>
+      <div class="grid">
+        {index.recipes.map((recipe: { category: string; slug: string; name: string; summary: string; executorTypes: string[] }) => <RecipeCard recipe={recipe} />)}
+      </div>
+      {index.recipes.length === 0 && <p style="color: var(--color-subtle);">No recipes yet. Check back soon!</p>}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import CategoryNav from '../../components/CategoryNav.astro';
+import allIndex from '../../../../index.json';
+
+export function getStaticPaths() {
+  const categories = [...new Set(allIndex.recipes.map((r: { category: string }) => r.category))];
+  return categories.map((category: string) => ({ params: { category } }));
+}
+
+const { category } = Astro.params;
+const recipes = allIndex.recipes.filter((r: { category: string }) => r.category === category);
+const categories = [...new Set(allIndex.recipes.map((r: { category: string }) => r.category))];
+---
+<BaseLayout title={category}>
+  <div style="display: flex; gap: 32px;">
+    <CategoryNav categories={categories} current={category} />
+    <div style="flex: 1;">
+      <h1 style="font-size: 24px; margin-bottom: 8px; text-transform: capitalize;">{category}</h1>
+      <p style="color: var(--color-subtle); margin-bottom: 24px;">{recipes.length} recipe{recipes.length !== 1 ? 's' : ''}</p>
+      <div class="grid">
+        {recipes.map((recipe: { category: string; slug: string; name: string; summary: string; executorTypes: string[] }) => <RecipeCard recipe={recipe} />)}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
